@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { LoginSchema, LoginSchemaType } from "@/schema/login-schema.zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 const LoginForm = () => {
@@ -23,7 +24,8 @@ const LoginForm = () => {
   });
 
   async function formSubmit(data: LoginSchemaType) {
-    await actionLogin(data);
+    const redirectUrl = await actionLogin(data);
+    redirect(redirectUrl);
   }
 
   return (

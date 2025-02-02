@@ -4,7 +4,10 @@ import { signIn, signOut } from "@/utils/auth";
 
 export async function actionLogin(data: LoginSchemaType) {
   try {
-    signIn("nodemailer", data);
+    return await signIn("nodemailer", {
+      ...data,
+      redirect: false,
+    });
   } catch (error) {
     console.error("The error is: ", error);
   }

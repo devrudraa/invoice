@@ -6,7 +6,7 @@ import { LoaderCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 grid [grid-template-areas:'content'] place-items-center",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -59,7 +59,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(
+          buttonVariants({ variant, size, className }),
+          "grid [grid-template-areas:'content'] place-items-center"
+        )}
         ref={ref}
         {...props}
         disabled={disabled || loading}
@@ -71,8 +74,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             `[grid-area:content] w-full bg-inherit flex items-center justify-center h-full`,
             loading ? "visible" : "invisible"
           )}
+          aria-label="loading..."
         >
-          <LoaderCircle />
+          <LoaderCircle className="animate-spin" />
         </div>
       </Comp>
     );
