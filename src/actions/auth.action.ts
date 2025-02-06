@@ -4,7 +4,7 @@ import { signIn, signOut } from "@/utils/auth";
 
 export async function actionLogin(data: LoginSchemaType) {
   try {
-    return await signIn("nodemailer", {
+    return await signIn("resend", {
       ...data,
       redirect: false,
     });
@@ -14,5 +14,5 @@ export async function actionLogin(data: LoginSchemaType) {
 }
 
 export async function actionLogout() {
-  signOut();
+  signOut({ redirect: true, redirectTo: "/login" });
 }
