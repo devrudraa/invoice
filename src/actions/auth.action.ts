@@ -14,5 +14,5 @@ export async function actionLogin(data: LoginSchemaType) {
 }
 
 export async function actionLogout() {
-  signOut({ redirect: true, redirectTo: "/login" });
+  await signOut({ redirect: true, redirectTo: "/login" });
 }
