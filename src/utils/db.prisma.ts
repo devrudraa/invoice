@@ -40,7 +40,7 @@ export default prisma;
 
 if (process.env.NODE_ENV !== "production") globalThis.prismaGlobal = prisma;
 
-export function CustomPrismaAdapter(p: PrismaClient): Adapter {
+export function CustomPrismaAdapter(p: typeof prisma): Adapter {
   const origin = PrismaAdapter(p);
   return {
     ...origin,

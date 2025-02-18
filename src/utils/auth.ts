@@ -27,4 +27,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     signIn: "/dashboard",
     verifyRequest: "/verify",
   },
+  callbacks: {
+    async session({ session, user }) {
+      const db_user = await prisma.user.findUnique({ where: { id: user.id } });
+
+      // Setting onboarding false or true based of if firstName and address is present
+      // Not using lastName as it is optional in schema.prisma
+      if (db_user?.firstName && db_user?.address) {
+        session.onboarded = true; // Set onboarded to true if both fields exist
+      } else {
+        session.onboarded = false; // Set onboarded to false if either field is missing
+      }
+
+      return session;
+    },
+  },
 });
