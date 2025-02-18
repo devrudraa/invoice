@@ -11,7 +11,7 @@ import {
 import { User2 } from "lucide-react";
 import Link from "next/link";
 
-const DashboardUserActions = ({}) => {
+const DashboardUserDropdown = ({}) => {
   return (
     <div className="flex items-center">
       <DropdownMenu>
@@ -43,4 +43,4 @@ const DashboardUserActions = ({}) => {
     </div>
   );
 };
-export default DashboardUserActions;
+export default DashboardUserDropdown;

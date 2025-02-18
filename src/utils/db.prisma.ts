@@ -3,7 +3,31 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { Adapter } from "next-auth/adapters";
 
 const prismaClientSingleton = () => {
-  return new PrismaClient();
+  return new PrismaClient().$extends({
+    query: {
+      user: {
+        async create({ args, query }) {
+          if (args.data.firstName || args.data.lastName) {
+            args.data.name = `${args.data.firstName ?? ""} ${
+              args.data.lastName ?? ""
+            }`.trim();
+          }
+          return query(args);
+        },
+        async update({ args, query }) {
+          if (
+            args.data.firstName !== undefined ||
+            args.data.lastName !== undefined
+          ) {
+            args.data.name = `${args.data.firstName ?? ""} ${
+              args.data.lastName ?? ""
+            }`.trim();
+          }
+          return query(args);
+        },
+      },
+    },
+  });
 };
 
 declare const globalThis: {

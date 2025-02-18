@@ -1,6 +1,6 @@
 import DashboardMobileNav from "@/components/page/dashboard/dashboard-mobile-nav";
 import DashboardSidebar from "@/components/page/dashboard/dashboard-sidebar";
-import DashboardUserActions from "@/components/page/dashboard/dashboard-user-actions";
+import DashboardUserDropdown from "@/components/page/dashboard/dashboard-user-dropdown";
 import { checkSession } from "@/utils/hooks/use-session.hook";
 import React, { FC } from "react";
 
@@ -16,7 +16,7 @@ const Layout: FC<LayoutProps> = async ({ children }) => {
       <DashboardSidebar />
       <div className="flex flex-col">
         <header className="flex h-14 items-center justify-end gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
-          <DashboardUserActions />
+          <DashboardUserDropdown />
           <DashboardMobileNav />
         </header>
         <main className="flex flex-1 flex-col gap-4 lg:gap-6 p-4 lg:p-6">
