@@ -17,8 +17,11 @@ import {
   ProductForm,
   UserDetailsForm,
 } from "./forms-chunk";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function CreateInvoice() {
+  const router = useRouter();
   const methods = useForm<InvoiceFormSchemaType>({
     resolver: zodResolver(invoiceSchema),
     defaultValues: {
@@ -32,7 +35,7 @@ export default function CreateInvoice() {
       invoiceItemQuantity: "",
       invoiceItemRate: "",
       invoiceName: "",
-      invoiceNumber: 0,
+      invoiceNumber: "0",
       note: "",
       status: "PENDING",
       currency: "INR",
@@ -48,6 +51,9 @@ export default function CreateInvoice() {
     if (response?.type === "error") {
       setFormServerErrors<InvoiceFormSchemaType>(methods.setError, response);
       return;
+    } else if (response.type === "success") {
+      toast.success(response.message);
+      router.push("/dashboard/invoice");
     }
   };
 

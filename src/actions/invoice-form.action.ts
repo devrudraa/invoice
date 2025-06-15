@@ -50,10 +50,10 @@ export async function createInvoiceAction(
     currency: parsed_data.currency,
   });
 
-  const data = await prisma.invoice.create({
+  await prisma.invoice.create({
     data: {
       invoiceName: parsed_data.invoiceName,
-      invoiceNumber: parsed_data.invoiceNumber,
+      invoiceNumber: Number(parsed_data.invoiceItemRate) || 0,
 
       dueDate: parsed_data.dueDate,
       date: parsed_data.date,
@@ -77,8 +77,6 @@ export async function createInvoiceAction(
       userId: session.user.id,
     },
   });
-
-  console.log(data);
 
   // Simulate a successful response
   return { type: "success", message: "Invoice created successfully!" };
