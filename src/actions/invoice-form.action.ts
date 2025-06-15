@@ -1,11 +1,10 @@
 "use server";
-import { formatCurrency } from "@/lib/utils";
 import {
   InvoiceFormSchemaType,
   invoiceSchema,
 } from "@/schema/invoice-schema.zod";
 import prisma from "@/utils/db.prisma";
-import { checkSession } from "@/utils/hooks/use-session.hook";
+import { getSession } from "@/utils/hooks/use-session.hook";
 import { redirect } from "next/navigation";
 
 interface ErrorType {
@@ -23,7 +22,7 @@ type ReturnType = ErrorType | SuccessType;
 export async function createInvoiceAction(
   formData: InvoiceFormSchemaType
 ): Promise<ReturnType> {
-  const session = await checkSession();
+  const session = await getSession();
 
   if (!session.user) {
     redirect("/login");
@@ -45,23 +44,19 @@ export async function createInvoiceAction(
   const totalAmount =
     (Number(parsed_data.invoiceItemQuantity) || 0) *
     (Number(parsed_data.invoiceItemRate) || 0);
-  const totalCurrency = formatCurrency({
-    amount: totalAmount,
-    currency: parsed_data.currency,
-  });
 
   await prisma.invoice.create({
     data: {
       invoiceName: parsed_data.invoiceName,
-      invoiceNumber: Number(parsed_data.invoiceItemRate) || 0,
+      invoiceNumber: Number(parsed_data.invoiceNumber) || 0,
 
       dueDate: parsed_data.dueDate,
       date: parsed_data.date,
 
-      invoiceItemRate: parsed_data.invoiceItemRate,
-      invoiceItemQuantity: parsed_data.invoiceItemQuantity,
+      invoiceItemRate: Number(parsed_data.invoiceItemRate) || 0,
+      invoiceItemQuantity: Number(parsed_data.invoiceItemQuantity) || 0,
       invoiceItemDescription: parsed_data.invoiceItemDescription,
-      invoiceItemTotal: totalCurrency,
+      invoiceItemTotal: totalAmount,
       note: parsed_data.note,
 
       fromAddress: parsed_data.fromName,

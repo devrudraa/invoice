@@ -25,9 +25,12 @@ export function setFormServerErrors<T extends FieldValues>(
   }
 }
 
+export const Currency = ["INR", "USD", "EUR", "GBP"] as const;
+export type CurrencyType = (typeof Currency)[number];
+
 interface iAppProps {
   amount: number;
-  currency: "INR" | "USD" | "EUR" | "GBP";
+  currency: CurrencyType;
 }
 
 export function formatCurrency({ amount, currency }: iAppProps) {

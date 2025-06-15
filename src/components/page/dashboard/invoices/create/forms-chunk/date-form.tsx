@@ -35,8 +35,8 @@ export function DateForm() {
           control={control}
           name="date"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Date</FormLabel>
+            <FormItem className="flex flex-col mt-1">
+              <FormLabel className="mb-2">Date</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>

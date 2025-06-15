@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -6,10 +7,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
+import { formatCurrency } from "@/lib/utils";
+import { getInvoices } from "./get-invoice";
 import InvoiceAction from "./invoice-action";
 
-export default function InvoiceTable() {
+export default async function InvoiceTable() {
+  const data = await getInvoices();
+
   return (
     <Table>
       <TableHeader>
@@ -23,16 +27,29 @@ export default function InvoiceTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow>
-          <TableCell>#1</TableCell>
-          <TableCell>Dev</TableCell>
-          <TableCell>$2000</TableCell>
-          <TableCell>Paid</TableCell>
-          <TableCell>25/12/25</TableCell>
-          <TableCell className="flex justify-end">
-            <InvoiceAction />
-          </TableCell>
-        </TableRow>
+        {data.map((invoice) => (
+          <TableRow key={invoice.id}>
+            <TableCell>#{invoice.invoiceNumber}</TableCell>
+            <TableCell>{invoice.clientName}</TableCell>
+            <TableCell>
+              {formatCurrency({
+                amount: invoice.invoiceItemTotal,
+                currency: invoice.currency,
+              })}
+            </TableCell>
+            <TableCell>
+              <Badge>{invoice.status}</Badge>
+            </TableCell>
+            <TableCell>
+              {new Intl.DateTimeFormat("en-IN", { dateStyle: "medium" }).format(
+                invoice.createdAt
+              )}
+            </TableCell>
+            <TableCell className="flex justify-end">
+              <InvoiceAction />
+            </TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );

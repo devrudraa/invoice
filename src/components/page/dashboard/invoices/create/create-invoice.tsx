@@ -46,6 +46,26 @@ export default function CreateInvoice() {
   });
 
   const formSubmit = async (data: InvoiceFormSchemaType) => {
+    console.log(data);
+
+    if (isNaN(Number(data.invoiceNumber))) {
+      methods.setError("invoiceNumber", { message: "Please enter a number" });
+      methods.setFocus("invoiceNumber");
+      return;
+    }
+    if (isNaN(Number(data.invoiceItemQuantity))) {
+      methods.setError("invoiceItemQuantity", {
+        message: "Please enter a number",
+      });
+      methods.setFocus("invoiceItemQuantity");
+      return;
+    }
+    if (isNaN(Number(data.invoiceItemRate))) {
+      methods.setError("invoiceItemRate", { message: "Please enter a number" });
+      methods.setFocus("invoiceItemRate");
+      return;
+    }
+
     const response = await createInvoiceAction(data);
 
     if (response?.type === "error") {

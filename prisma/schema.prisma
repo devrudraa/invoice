@@ -106,13 +106,13 @@ model Invoice {
   clientEmail   String
   clientAddress String
 
-  currency      String
+  currency      Currency
   invoiceNumber Int
 
   invoiceItemDescription String
-  invoiceItemQuantity    String
-  invoiceItemRate        String
-  invoiceItemTotal       String
+  invoiceItemQuantity    Int
+  invoiceItemRate        Int
+  invoiceItemTotal       Int
 
   note   String?
   User   User?   @relation(fields: [userId], references: [id])
@@ -122,4 +122,11 @@ model Invoice {
 enum InvoiceStatus {
   PAID
   PENDING
+}
+
+enum Currency {
+  INR
+  USD
+  EUR
+  GBP
 }

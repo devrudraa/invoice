@@ -73,7 +73,7 @@ export function ProductForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="0" {...field} />
+                    <Input placeholder="0" {...field} type="number" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -87,7 +87,7 @@ export function ProductForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input placeholder="0" {...field} />
+                    <Input placeholder="0" {...field} type="number" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

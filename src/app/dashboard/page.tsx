@@ -1,7 +1,7 @@
-import { checkSession } from "@/utils/hooks/use-session.hook";
+import { getSession } from "@/utils/hooks/use-session.hook";
 
 async function Page() {
-  const session = await checkSession();
+  const session = await getSession();
 
   return <div>{session.user?.email}</div>;
 }

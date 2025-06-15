@@ -6,7 +6,7 @@ import {
 } from "@/schema/onboarding-schema.zod";
 import { signIn, signOut } from "@/utils/auth";
 import prisma from "@/utils/db.prisma";
-import { checkSession } from "@/utils/hooks/use-session.hook";
+import { getSession } from "@/utils/hooks/use-session.hook";
 
 export async function actionLogin(data: LoginSchemaType) {
   try {
@@ -24,7 +24,7 @@ export async function actionLogout() {
 }
 
 export async function onboardUser(data: onboardingSchemaType) {
-  const session = await checkSession();
+  const session = await getSession();
 
   const parsed_data = onboardingSchema.safeParse(data);
 

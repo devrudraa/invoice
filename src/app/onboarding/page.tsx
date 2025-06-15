@@ -6,11 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { checkSession } from "@/utils/hooks/use-session.hook";
+import { getSession } from "@/utils/hooks/use-session.hook";
 import { redirect } from "next/navigation";
 
 const Page = async () => {
-  const session = await checkSession();
+  const session = await getSession();
   if (session.onboarded) {
     redirect("/dashboard");
   }

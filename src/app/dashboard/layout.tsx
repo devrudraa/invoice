@@ -1,7 +1,7 @@
 import DashboardMobileNav from "@/components/page/dashboard/dashboard-mobile-nav";
 import DashboardSidebar from "@/components/page/dashboard/dashboard-sidebar";
 import DashboardUserDropdown from "@/components/page/dashboard/dashboard-user-dropdown";
-import { checkSession } from "@/utils/hooks/use-session.hook";
+import { getSession } from "@/utils/hooks/use-session.hook";
 import { redirect } from "next/navigation";
 import React, { FC } from "react";
 
@@ -10,7 +10,7 @@ interface LayoutProps {
 }
 
 const Layout: FC<LayoutProps> = async ({ children }) => {
-  const session = await checkSession();
+  const session = await getSession();
 
   if (!session.onboarded) {
     redirect("/onboarding");

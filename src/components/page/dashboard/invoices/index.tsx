@@ -1,4 +1,3 @@
-"use client";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -10,7 +9,7 @@ import {
 import { cn } from "@/lib/utils";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 import InvoiceTable from "./invoice-table";
 
 export default function InvoicesPage() {
@@ -34,7 +33,9 @@ export default function InvoicesPage() {
         </div>
       </CardHeader>
       <CardContent>
-        <InvoiceTable />
+        <Suspense fallback={<p>Todo: add skeleton loading</p>}>
+          <InvoiceTable />
+        </Suspense>
       </CardContent>
     </Card>
   );

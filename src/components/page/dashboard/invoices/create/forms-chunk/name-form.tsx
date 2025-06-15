@@ -51,7 +51,12 @@ export function NameForm() {
               <FormItem>
                 <FormLabel>Invoice No.</FormLabel>
                 <FormControl>
-                  <Input {...field} icon={"#"} placeholder="INV-001" />
+                  <Input
+                    {...field}
+                    icon={"INV-"}
+                    placeholder="001"
+                    type="number"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
