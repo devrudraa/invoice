@@ -11,6 +11,7 @@ declare global {
       EMAIL_SERVER_PORT: number;
       EMAIL_FROM: string;
       DATABASE_URL: string;
+      NEXT_PUBLIC_URL: string;
     }
   }
 }

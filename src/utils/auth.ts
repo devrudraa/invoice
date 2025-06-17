@@ -8,7 +8,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Resend({
       apiKey: process.env.AUTH_RESEND_KEY,
-      from: "auth@kritisartwork.shop",
+      from: "auth@rudracode.com",
     }),
     // Nodemailer({
     //   server: {
@@ -33,7 +33,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       // Setting onboarding false or true based of if firstName and address is present
       // Not using lastName as it is optional in schema.prisma
-      if (db_user?.firstName && db_user?.address) {
+      if (db_user && db_user?.firstName && db_user?.address) {
         session.onboarded = true; // Set onboarded to true if both fields exist
       } else {
         session.onboarded = false; // Set onboarded to false if either field is missing

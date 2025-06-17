@@ -9,51 +9,71 @@ import { Label } from "@/components/ui/label";
 import { InvoiceFormSchemaType } from "@/schema/invoice-schema.zod";
 import React from "react";
 import { useFormContext } from "react-hook-form";
+import { useSession } from "next-auth/react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function UserDetailsForm() {
-  const { control } = useFormContext<InvoiceFormSchemaType>();
+  const { control, setValue } = useFormContext<InvoiceFormSchemaType>();
+  const { status, data } = useSession();
+
+  if (status === "authenticated" && data) {
+    const name = `${data.user?.firstName as string} ${data.user?.lastName as string}`;
+    setValue("fromName", name);
+    setValue("fromEmail", `${data.user?.email}`);
+    setValue("fromAddress", `${data.user?.address}`);
+  }
 
   return (
     <div className="grid md:grid-cols-2 gap-6">
       <div>
         <Label>From</Label>
         <div className="space-y-2">
-          <FormField
-            control={control}
-            name="fromName"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder="Your Name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="fromEmail"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder="Your Email" type="email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={control}
-            name="fromAddress"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder="Your Address" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {status != "authenticated" || !data ? (
+            <>
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+              <Skeleton className="h-10 w-full" />
+            </>
+          ) : (
+            <>
+              <FormField
+                control={control}
+                name="fromName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input placeholder="Your Name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="fromEmail"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input placeholder="Your Email" type="email" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name="fromAddress"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input placeholder="Your Address" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </>
+          )}
         </div>
       </div>
 

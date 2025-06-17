@@ -35,7 +35,7 @@ export default function CreateInvoice() {
       invoiceItemQuantity: "",
       invoiceItemRate: "",
       invoiceName: "",
-      invoiceNumber: "0",
+      invoiceNumber: "",
       note: "",
       status: "PENDING",
       currency: "INR",
@@ -74,6 +74,8 @@ export default function CreateInvoice() {
     } else if (response.type === "success") {
       toast.success(response.message);
       router.push("/dashboard/invoice");
+    } else {
+      toast.error(response.error);
     }
   };
 

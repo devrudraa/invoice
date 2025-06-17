@@ -4,10 +4,24 @@ import NextAuth from "next-auth";
 // Extend the NextAuth session and user types
 declare module "next-auth" {
   interface Session {
-    onboarded: boolean; // Add customField to the session
+    onboarded: boolean;
+    createdAt: string;
+    expires: string;
+    onboarded: boolean;
+    sessionToken: string;
+    updatedAt: string;
+    userId: string;
   }
 
   interface User {
-    id: string; // Make sure to include the user ID in the User type if it's not already there
+    id: string;
+    address: string;
+    createdAt: string;
+    email: string;
+    emailVerified: string;
+    firstName: string;
+    id: string;
+    lastName: string;
+    name: string;
   }
 }
