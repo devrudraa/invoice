@@ -12,11 +12,17 @@ import { useFormContext } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function UserDetailsForm() {
+export function UserDetailsForm({
+  changeDefaultValue = true,
+  isEditing = false,
+}: {
+  changeDefaultValue?: boolean;
+  isEditing?: boolean;
+}) {
   const { control, setValue } = useFormContext<InvoiceFormSchemaType>();
   const { status, data } = useSession();
 
-  if (status === "authenticated" && data) {
+  if (status === "authenticated" && data && changeDefaultValue) {
     const name = `${data.user?.firstName as string} ${data.user?.lastName as string}`;
     setValue("fromName", name);
     setValue("fromEmail", `${data.user?.email}`);
@@ -28,7 +34,7 @@ export function UserDetailsForm() {
       <div>
         <Label>From</Label>
         <div className="space-y-2">
-          {status != "authenticated" || !data ? (
+          {(status != "authenticated" || !data) && changeDefaultValue ? (
             <>
               <Skeleton className="h-10 w-full" />
               <Skeleton className="h-10 w-full" />
@@ -98,7 +104,12 @@ export function UserDetailsForm() {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="Client Email" type="email" {...field} />
+                  <Input
+                    placeholder="Client Email"
+                    type="email"
+                    {...field}
+                    disabled={isEditing}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

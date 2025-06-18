@@ -16,7 +16,7 @@ import {
   NameForm,
   ProductForm,
   UserDetailsForm,
-} from "./forms-chunk";
+} from "@/components/page/dashboard/invoices/forms-chunk";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -46,8 +46,6 @@ export default function CreateInvoice() {
   });
 
   const formSubmit = async (data: InvoiceFormSchemaType) => {
-    console.log(data);
-
     if (isNaN(Number(data.invoiceNumber))) {
       methods.setError("invoiceNumber", { message: "Please enter a number" });
       methods.setFocus("invoiceNumber");

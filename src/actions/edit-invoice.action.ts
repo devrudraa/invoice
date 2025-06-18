@@ -1,4 +1,5 @@
 "use server";
+import { formatCurrency } from "@/lib/utils";
 import {
   InvoiceFormSchemaType,
   invoiceSchema,
@@ -7,13 +8,13 @@ import prisma from "@/utils/db.prisma";
 import { getSession } from "@/utils/hooks/use-session.hook";
 import { resend } from "@/utils/resend-send";
 import { redirect } from "next/navigation";
-import { InvoiceTemplate } from "../../email-template/invoice-template";
-import { formatCurrency } from "@/lib/utils";
 import { ReactNode } from "react";
+import { EditInvoiceTemplate } from "../../email-template/edit-invoice-template";
 import { ActionReturnType } from "./action.types";
 
-export async function createInvoiceAction(
-  formData: InvoiceFormSchemaType
+export async function editInvoiceAction(
+  formData: InvoiceFormSchemaType,
+  id: string
 ): Promise<ActionReturnType> {
   const session = await getSession();
 
@@ -39,7 +40,8 @@ export async function createInvoiceAction(
     (Number(parsed_data.invoiceItemRate) || 0);
 
   try {
-    const prismaData = await prisma.invoice.create({
+    const prismaData = await prisma.invoice.update({
+      where: { id: id, userId: session.user.id },
       data: {
         invoiceName: parsed_data.invoiceName,
         invoiceNumber: Number(parsed_data.invoiceNumber) || 0,
@@ -71,7 +73,7 @@ export async function createInvoiceAction(
       from: ` ${parsed_data.fromName} <invoice@rudracode.com>`,
       to: [parsed_data.clientEmail],
       subject: `Invoice for ${parsed_data.clientName}`,
-      react: InvoiceTemplate({
+      react: EditInvoiceTemplate({
         invoiceId: prismaData.id,
         invoiceDueDate: new Intl.DateTimeFormat("en-IN", {
           dateStyle: "long",
@@ -86,9 +88,9 @@ export async function createInvoiceAction(
     });
 
     // Simulate a successful response
-    return { type: "success", message: "Invoice created successfully!" };
+    return { type: "success", message: "Invoice edited successfully!" };
   } catch (error) {
     console.log("Error while creating invoice", error);
-    return { type: "Custom-Error", error: "Error while creating invoice" };
+    return { type: "Custom-Error", error: "Error while editing invoice" };
   }
 }

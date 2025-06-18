@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-export default function InvoiceAction() {
+export default function InvoiceAction({ id }: { id: string }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -24,7 +24,7 @@ export default function InvoiceAction() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <Link href={"todo:"}>
+        <Link href={`/dashboard/invoice/edit/${id}`}>
           <DropdownMenuItem>
             <Pencil className="size-4 mr-2" />
             Edit
