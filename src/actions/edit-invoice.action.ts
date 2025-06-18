@@ -69,7 +69,7 @@ export async function editInvoiceAction(
       },
     });
 
-    await resend.emails.send({
+    const email = await resend.emails.send({
       from: ` ${parsed_data.fromName} <invoice@rudracode.com>`,
       to: [parsed_data.clientEmail],
       subject: `Invoice for ${parsed_data.clientName}`,
@@ -85,7 +85,20 @@ export async function editInvoiceAction(
           currency: parsed_data.currency,
         }),
       }) as ReactNode,
+      // Only works in prod
+      // TODO:
+      // attachments: [
+      //   {
+      //     path: `${process.env.NEXT_PUBLIC_URL}/api/invoice/${prismaData.id}`,
+      //     filename: "invoice.pdf",
+      //   },
+      // ],
     });
+
+    if (email.error) {
+      await prisma.invoice.delete({ where: { id: prismaData.id } });
+      throw new Error();
+    }
 
     // Simulate a successful response
     return { type: "success", message: "Invoice edited successfully!" };

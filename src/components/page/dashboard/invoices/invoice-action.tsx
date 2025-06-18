@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,6 +15,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import Link from "next/link";
+import { reminderInvoiceBtnHandler } from "./resend-invoice";
 
 export default function InvoiceAction({ id }: { id: string }) {
   return (
@@ -30,18 +32,21 @@ export default function InvoiceAction({ id }: { id: string }) {
             Edit
           </DropdownMenuItem>
         </Link>
-        <Link href={"todo:"}>
+        <Link href={`/api/invoice/${id}`} target="_blank">
           <DropdownMenuItem>
             <DownloadCloud className="size-4 mr-2" />
             Download
           </DropdownMenuItem>
         </Link>
-        <Link href={"todo:"}>
-          <DropdownMenuItem>
-            <MailIcon className="size-4 mr-2" />
-            Remainder Email
-          </DropdownMenuItem>
-        </Link>
+
+        <DropdownMenuItem
+          onClick={() => {
+            reminderInvoiceBtnHandler(id);
+          }}
+        >
+          <MailIcon className="size-4 mr-2" />
+          Reminder Email
+        </DropdownMenuItem>
 
         <Link href={"todo:"}>
           <DropdownMenuItem>
