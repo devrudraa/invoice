@@ -73,7 +73,7 @@ export default function EditInvoice({ data: pData }: EditInvoice) {
 
     const response = await editInvoiceAction(data, pData.id);
 
-    if (response?.type === "error") {
+    if (response.type === "error") {
       setFormServerErrors<InvoiceFormSchemaType>(methods.setError, response);
       return;
     } else if (response.type === "success") {

@@ -21,6 +21,7 @@ export async function resendInvoiceAction(
       where: {
         id: id,
         userId: session.user.id,
+        status: "PENDING",
       },
     });
 

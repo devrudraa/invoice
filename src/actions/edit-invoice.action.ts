@@ -40,8 +40,19 @@ export async function editInvoiceAction(
     (Number(parsed_data.invoiceItemRate) || 0);
 
   try {
+    const oldInvoice = await prisma.invoice.findUnique({
+      where: { id: id, userId: session.user.id, status: "PENDING" },
+    });
+
+    if (!oldInvoice) {
+      return {
+        type: "Custom-Error",
+        error: "No Invoice found! or Invoice is marked as paid!",
+      };
+    }
+
     const prismaData = await prisma.invoice.update({
-      where: { id: id, userId: session.user.id },
+      where: { id: id, userId: session.user.id, status: "PENDING" },
       data: {
         invoiceName: parsed_data.invoiceName,
         invoiceNumber: Number(parsed_data.invoiceNumber) || 0,

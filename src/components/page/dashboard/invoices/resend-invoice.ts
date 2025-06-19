@@ -7,8 +7,6 @@ export async function reminderInvoiceBtnHandler(id: string) {
   toast.promise(promise, {
     loading: "Loading...",
     success: (data) => {
-      console.log(data);
-
       if (data.type == "Custom-Error") {
         throw new Error(data.error);
       } else if (data.type === "error") {

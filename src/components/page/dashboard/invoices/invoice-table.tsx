@@ -46,7 +46,10 @@ export default async function InvoiceTable() {
               )}
             </TableCell>
             <TableCell className="flex justify-end">
-              <InvoiceAction id={invoice.id} />
+              <InvoiceAction
+                id={invoice.id}
+                isPaid={invoice.status === "PAID"}
+              />
             </TableCell>
           </TableRow>
         ))}
