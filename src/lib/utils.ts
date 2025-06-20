@@ -39,3 +39,13 @@ export function formatCurrency({ amount, currency }: iAppProps) {
     currency: currency,
   }).format(amount);
 }
+
+// Market value as per 20/05/25
+// It will help in calculating the total amount
+// to show on the dashboard
+export const ratesToUSD: Record<string, number> = {
+  INR: 0.01154,
+  EUR: 1.152,
+  GBP: 1.3477,
+  USD: 1,
+};
