@@ -13,6 +13,7 @@ export async function actionLogin(data: LoginSchemaType) {
     return await signIn("resend", {
       ...data,
       redirect: false,
+      redirectTo: "/dashboard",
     });
   } catch (error) {
     console.error("The error is: ", error);

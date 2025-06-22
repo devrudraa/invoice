@@ -39,20 +39,21 @@ export function ProductForm() {
   return (
     <>
       <div>
-        <div className="grid grid-cols-12 gap-4 mb-2 font-medium">
+        <div className="hidden md:grid grid-cols-12 gap-4 mb-2 font-medium">
           <p className="col-span-6">Description</p>
           <p className="col-span-2">Quantity</p>
           <p className="col-span-2">Rate</p>
           <p className="col-span-2">Amount</p>
         </div>
 
-        <div className="grid grid-cols-12 gap-4 mb-4">
+        <div className="space-y-3 md:space-y-0 md:grid grid-cols-12 gap-4 mb-4">
           <div className="col-span-6">
             <FormField
               control={control}
               name="invoiceItemDescription"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel className="md:hidden">Description</FormLabel>
                   <FormControl>
                     <Textarea
                       className="min-h-[40px]"
@@ -72,6 +73,7 @@ export function ProductForm() {
               name="invoiceItemQuantity"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel className="md:hidden">Quantity</FormLabel>
                   <FormControl>
                     <Input placeholder="0" {...field} type="number" />
                   </FormControl>
@@ -86,6 +88,7 @@ export function ProductForm() {
               name="invoiceItemRate"
               render={({ field }) => (
                 <FormItem>
+                  <FormLabel className="md:hidden">Rate</FormLabel>
                   <FormControl>
                     <Input placeholder="0" {...field} type="number" />
                   </FormControl>
@@ -95,18 +98,19 @@ export function ProductForm() {
             />
           </div>
           <div className="col-span-2">
+            <FormLabel className="md:hidden">Total</FormLabel>
             <Input value={calculatedCurrency} disabled />
           </div>
         </div>
       </div>
 
-      <div className="flex justify-end mt-4">
-        <div className="flex flex-col gap-2 w-1/3">
-          <div className="flex justify-between font-medium py-2">
+      <div className="flex justify-start md:justify-end mt-4">
+        <div className="flex flex-col gap-2 flex-1 md:flex-grow-0 min-w-fit md:w-1/3">
+          <div className="flex justify-between font-medium py-2 gap-5">
             <span>Subtotal</span>
             <span>{calculatedCurrency}</span>
           </div>
-          <div className="flex justify-between font-medium py-2 border-t">
+          <div className="flex justify-between font-medium py-2 border-t gap-5">
             <span>Total ({currency})</span>
             <span>{calculatedCurrency}</span>
           </div>

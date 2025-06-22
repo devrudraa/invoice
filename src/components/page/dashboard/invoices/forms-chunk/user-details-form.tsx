@@ -7,7 +7,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { InvoiceFormSchemaType } from "@/schema/invoice-schema.zod";
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -22,12 +22,15 @@ export function UserDetailsForm({
   const { control, setValue } = useFormContext<InvoiceFormSchemaType>();
   const { status, data } = useSession();
 
-  if (status === "authenticated" && data && changeDefaultValue) {
-    const name = `${data.user?.firstName as string} ${data.user?.lastName as string}`;
-    setValue("fromName", name);
-    setValue("fromEmail", `${data.user?.email}`);
-    setValue("fromAddress", `${data.user?.address}`);
-  }
+  useEffect(() => {
+    if (status === "authenticated" && data && changeDefaultValue) {
+      const name = `${data.user?.firstName as string} ${data.user?.lastName as string}`;
+      setValue("fromName", name);
+      setValue("fromEmail", `${data.user?.email}`);
+      setValue("fromAddress", `${data.user?.address}`);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
   return (
     <div className="grid md:grid-cols-2 gap-6">

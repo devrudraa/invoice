@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useDashboardBlocks } from "./action";
 import { use } from "react";
 import { formatCurrency } from "@/lib/utils";
+import Image from "next/image";
 
 export default function RecentBlock() {
   const { recentData } = use(useDashboardBlocks());
@@ -12,6 +13,15 @@ export default function RecentBlock() {
         <CardTitle>Recent Invoices</CardTitle>
       </CardHeader>
       <CardContent className="w-full space-y-3">
+        {recentData.length === 0 && (
+          <Image
+            className="mx-auto my-5"
+            src={"/undraw_taken.svg"}
+            width={200}
+            height={200}
+            alt="undraw_taken.svg"
+          />
+        )}
         {recentData.map((client) => {
           const clientName = client.clientName.split(" ");
 

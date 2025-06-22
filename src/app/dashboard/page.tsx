@@ -4,7 +4,7 @@ import SummaryBlock from "@/components/page/dashboard/dashboard-blocks/summary-b
 import { getSession } from "@/utils/hooks/use-session.hook";
 
 async function Page() {
-  const session = await getSession();
+  await getSession();
 
   return (
     <main className="space-y-4 md:space-y-8">

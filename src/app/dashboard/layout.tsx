@@ -26,7 +26,7 @@ const Layout: FC<LayoutProps> = async ({ children }) => {
             <DashboardUserDropdown />
             <DashboardMobileNav />
           </header>
-          <main className="flex flex-1 flex-col gap-4 lg:gap-6 p-4 lg:p-6">
+          <main className="max-w-[100dvw] flex flex-1 flex-col gap-4 lg:gap-6 p-2 lg:p-6">
             {children}
           </main>
         </div>

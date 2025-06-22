@@ -5,7 +5,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
+import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
 const chartConfig = {
   amount: {
@@ -23,20 +23,36 @@ interface ChartGraph {
 
 export default function ChartGraph({ data }: ChartGraph) {
   return (
-    <ChartContainer config={chartConfig} className="min-h-[300px]">
-      <ResponsiveContainer width={"100%"} height={"100%"}>
-        <LineChart data={data}>
-          <XAxis dataKey={"date"} />
-          <YAxis />
-          <ChartTooltip content={<ChartTooltipContent indicator="dot" />} />
-          <Line
-            type={"monotone"}
-            dataKey={"amount"}
-            stroke="var(--color-amount)"
-            strokeWidth={2}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+    <ChartContainer config={chartConfig}>
+      <LineChart
+        accessibilityLayer
+        data={data}
+        margin={{
+          left: 12,
+          right: 12,
+        }}
+      >
+        <CartesianGrid vertical={false} />
+        <XAxis
+          dataKey="date"
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          tickFormatter={(value) => value.slice(0, 3)}
+        />
+
+        <ChartTooltip
+          cursor={false}
+          content={<ChartTooltipContent hideLabel />}
+        />
+        <Line
+          dataKey="amount"
+          type="natural"
+          stroke="var(--color-amount)"
+          strokeWidth={1}
+          dot={true}
+        />
+      </LineChart>
     </ChartContainer>
   );
 }

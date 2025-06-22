@@ -25,7 +25,7 @@ const LoginForm = () => {
 
   async function formSubmit(data: LoginSchemaType) {
     const redirectUrl = await actionLogin(data);
-    redirect(redirectUrl);
+    if (redirectUrl != undefined) redirect(redirectUrl);
   }
 
   return (
