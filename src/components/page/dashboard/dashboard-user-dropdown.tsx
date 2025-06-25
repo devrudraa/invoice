@@ -35,7 +35,9 @@ const DashboardUserDropdown = ({}) => {
             className="bg-destructive text-destructive-foreground cursor-pointer"
           >
             <form action={actionLogout}>
-              <button className="w-full text-left ">Logout</button>
+              <button className="w-full text-left hover:text-destructive">
+                Logout
+              </button>
             </form>
           </DropdownMenuItem>
         </DropdownMenuContent>

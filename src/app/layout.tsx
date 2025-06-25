@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   title: "EzyInvoice - Invoicing Made Easy",
   description:
     "EzyInvoice helps you create, send, and manage professional invoices in seconds. Track payments, customize templates, and get paid faster—all in one place.",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
