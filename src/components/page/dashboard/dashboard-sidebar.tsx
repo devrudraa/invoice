@@ -1,24 +1,26 @@
 "use client";
+import { siteDetails } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import Logo from "@public/logo.png";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { dashboardLinks } from "./dashboard-links";
-
-// interface DashboardSidebarProps {}
-// const DashboardSidebar: FC<DashboardSidebarProps> = ({}) => {
 
 const DashboardSidebar = () => {
   return (
     <aside className="hidden border-r bg-muted/40 md:block">
       <div className="flex flex-col max-h-screen h-full gap-2">
         <div className="h-14 flex items-center border-b px-4 lg:h-[60px] lg:px-6">
-          <Link href={"/"} className="flex items-center gap-2">
-            <Image src={Logo} alt="logo" className="size-7" />
-            <span className="font-semibold text-blue-600 text-xl">
-              InvoiceEsy
-            </span>
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <Image
+              src={"/logo.svg"}
+              width={40}
+              height={40}
+              alt="EzyInvoice logo"
+            />
+            <h3 className="manrope text-xl font-semibold cursor-pointer">
+              {siteDetails.siteName}
+            </h3>
           </Link>
         </div>
         <div className="flex-1 ">
