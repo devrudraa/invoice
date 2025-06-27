@@ -12,6 +12,8 @@ declare global {
       EMAIL_FROM: string;
       DATABASE_URL: string;
       NEXT_PUBLIC_URL: string;
+      TURSO_AUTH_TOKEN: string;
+      TURSO_DATABASE_URL: string;
     }
   }
 }

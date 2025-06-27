@@ -1,26 +1,18 @@
 import NextAuth from "next-auth";
 // import Nodemailer from "next-auth/providers/nodemailer";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import Resend from "next-auth/providers/resend";
-import prisma, { CustomPrismaAdapter } from "./db.prisma";
+import { db } from "./db.dirzzle";
+import prisma from "./db.prisma";
+import { Adapter } from "next-auth/adapters";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: CustomPrismaAdapter(prisma),
+  adapter: DrizzleAdapter(db) as Adapter,
   providers: [
     Resend({
       apiKey: process.env.AUTH_RESEND_KEY,
       from: "auth@rudracode.com",
     }),
-    // Nodemailer({
-    //   server: {
-    //     host: process.env.EMAIL_SERVER_HOST,
-    //     port: process.env.EMAIL_SERVER_PORT,
-    //     auth: {
-    //       user: process.env.EMAIL_SERVER_USER,
-    //       pass: process.env.EMAIL_SERVER_PASSWORD,
-    //     },
-    //   },
-    //   from: process.env.EMAIL_FROM,
-    // }),
   ],
   pages: {
     signOut: "/login",
