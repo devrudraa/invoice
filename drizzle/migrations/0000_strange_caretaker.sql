@@ -11,7 +11,7 @@ CREATE TABLE `account` (
 	`id_token` text,
 	`session_state` text,
 	PRIMARY KEY(`provider`, `providerAccountId`),
-	FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE TABLE `authenticator` (
@@ -24,18 +24,18 @@ CREATE TABLE `authenticator` (
 	`credentialBackedUp` integer NOT NULL,
 	`transports` text,
 	PRIMARY KEY(`userId`, `credentialID`),
-	FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `authenticator_credentialID_unique` ON `authenticator` (`credentialID`);--> statement-breakpoint
-CREATE TABLE `Invoice` (
-	`id` text PRIMARY KEY NOT NULL,
+CREATE TABLE `invoice` (
+	`id` text PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1,1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))) NOT NULL,
 	`invoiceName` text NOT NULL,
-	`status` text NOT NULL,
-	`createdAt` text DEFAULT CURRENT_TIMESTAMP,
-	`updatedAt` text DEFAULT CURRENT_TIMESTAMP,
+	`createdAt` integer DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	`updatedAt` integer DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	`dueDate` text NOT NULL,
-	`date` text NOT NULL,
+	`date` integer NOT NULL,
+	`status` text NOT NULL,
 	`fromName` text NOT NULL,
 	`fromEmail` text NOT NULL,
 	`fromAddress` text NOT NULL,
@@ -56,10 +56,10 @@ CREATE TABLE `session` (
 	`sessionToken` text PRIMARY KEY NOT NULL,
 	`userId` text NOT NULL,
 	`expires` integer NOT NULL,
-	FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON UPDATE no action ON DELETE cascade
+	FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON UPDATE no action ON DELETE cascade
 );
 --> statement-breakpoint
-CREATE TABLE `User` (
+CREATE TABLE `user` (
 	`id` text PRIMARY KEY NOT NULL,
 	`firstName` text,
 	`lastName` text,
@@ -71,7 +71,7 @@ CREATE TABLE `User` (
 	`updatedAt` text DEFAULT CURRENT_TIMESTAMP
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `User_email_unique` ON `User` (`email`);--> statement-breakpoint
+CREATE UNIQUE INDEX `user_email_unique` ON `user` (`email`);--> statement-breakpoint
 CREATE TABLE `verificationToken` (
 	`identifier` text NOT NULL,
 	`token` text NOT NULL,

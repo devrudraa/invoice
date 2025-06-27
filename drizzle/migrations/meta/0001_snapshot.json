@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "5d84cd6c-881c-4870-ba60-1d26cfb870dd",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "f9887f65-6b83-41a5-9950-0cb910f281c0",
+  "prevId": "5d84cd6c-881c-4870-ba60-1d26cfb870dd",
   "tables": {
     "account": {
       "name": "account",
@@ -424,6 +424,34 @@
           "notNull": true,
           "autoincrement": false
         },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "emailVerified": {
+          "name": "emailVerified",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "firstName": {
           "name": "firstName",
           "type": "text",
@@ -440,27 +468,6 @@
         },
         "address": {
           "name": "address",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "emailVerified": {
-          "name": "emailVerified",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "image": {
-          "name": "image",
           "type": "text",
           "primaryKey": false,
           "notNull": false,

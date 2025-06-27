@@ -1,5 +1,5 @@
 import { formatCurrency } from "@/lib/utils";
-import prisma from "@/utils/db.prisma";
+import { db } from "@/utils/db.dirzzle";
 import jsPDF from "jspdf";
 import { NextResponse } from "next/server";
 
@@ -9,10 +9,8 @@ export async function GET(
 ) {
   const { invoiceId } = await params;
 
-  const invoice = await prisma.invoice.findUnique({
-    where: {
-      id: invoiceId,
-    },
+  const invoice = await db.query.invoices.findFirst({
+    where: (fields, { eq }) => eq(fields.id, invoiceId),
   });
 
   if (!invoice) {

@@ -16,15 +16,15 @@ import {
   InvoiceFormSchemaType,
   invoiceSchema,
 } from "@/schema/invoice-schema.zod";
+import type { Invoices } from "@drizzle/schema.drizzle";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Prisma } from "@prisma/client";
 import { Info } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 interface EditInvoice {
-  data: Prisma.InvoiceGetPayload<true>;
+  data: Invoices;
 }
 
 export default function EditInvoice({ data: pData }: EditInvoice) {

@@ -1,40 +1,35 @@
 "use server";
 import { ratesToUSD } from "@/lib/utils";
-import prisma from "@/utils/db.prisma";
+import { db } from "@/utils/db.dirzzle";
+import { invoices } from "@drizzle/schema.drizzle";
 import { getSession } from "@/utils/hooks/use-session.hook";
+import { eq, and, gte, lte, desc } from "drizzle-orm";
+
+// Helper to get current and 30 days ago dates
+const now = new Date();
+const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
 async function getInvoiceData(id: string) {
-  const [totalRevenue, pendingInvoices, paidInvoices] = await Promise.all([
-    prisma.invoice.findMany({
-      where: {
-        userId: id,
-      },
-      select: {
-        invoiceItemTotal: true,
-        currency: true,
-      },
-    }),
+  // Get all invoices for user
+  const totalRevenue = await db
+    .select({
+      invoiceItemTotal: invoices.invoiceItemTotal,
+      currency: invoices.currency,
+    })
+    .from(invoices)
+    .where(eq(invoices.userId, id));
 
-    prisma.invoice.findMany({
-      where: {
-        userId: id,
-        status: "PENDING",
-      },
-      select: {
-        id: true,
-      },
-    }),
+  // Get pending invoices
+  const pendingInvoices = await db
+    .select({ id: invoices.id })
+    .from(invoices)
+    .where(and(eq(invoices.userId, id), eq(invoices.status, "PENDING")));
 
-    prisma.invoice.findMany({
-      where: {
-        userId: id,
-        status: "PAID",
-      },
-      select: {
-        id: true,
-      },
-    }),
-  ]);
+  // Get paid invoices
+  const paidInvoices = await db
+    .select({ id: invoices.id })
+    .from(invoices)
+    .where(and(eq(invoices.userId, id), eq(invoices.status, "PAID")));
 
   return {
     totalRevenue,
@@ -44,24 +39,22 @@ async function getInvoiceData(id: string) {
 }
 
 async function getInvoiceGraphData(id: string) {
-  const data = await prisma.invoice.findMany({
-    where: {
-      userId: id,
-      status: "PAID",
-      createdAt: {
-        lte: new Date(),
-        gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-      },
-    },
-    select: {
-      createdAt: true,
-      invoiceItemTotal: true,
-      currency: true,
-    },
-    orderBy: {
-      createdAt: "asc",
-    },
-  });
+  const data = await db
+    .select({
+      createdAt: invoices.createdAt,
+      invoiceItemTotal: invoices.invoiceItemTotal,
+      currency: invoices.currency,
+    })
+    .from(invoices)
+    .where(
+      and(
+        eq(invoices.userId, id),
+        eq(invoices.status, "PAID"),
+        gte(invoices.createdAt, thirtyDaysAgo),
+        lte(invoices.createdAt, now)
+      )
+    )
+    .orderBy(invoices.createdAt);
 
   return (
     Object.values(
@@ -114,23 +107,19 @@ async function getInvoiceGraphData(id: string) {
 
 // Recent Data
 async function getRecentInvoice(id: string) {
-  return await prisma.invoice.findMany({
-    where: {
-      userId: id,
-    },
-    select: {
-      id: true,
-      clientName: true,
-      clientEmail: true,
-      invoiceItemTotal: true,
-      createdAt: true,
-      currency: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    take: 10,
-  });
+  return await db
+    .select({
+      id: invoices.id,
+      clientName: invoices.clientName,
+      clientEmail: invoices.clientEmail,
+      invoiceItemTotal: invoices.invoiceItemTotal,
+      createdAt: invoices.createdAt,
+      currency: invoices.currency,
+    })
+    .from(invoices)
+    .where(eq(invoices.userId, id))
+    .orderBy(desc(invoices.createdAt))
+    .limit(10);
 }
 
 export async function useDashboardBlocks() {

@@ -4,13 +4,15 @@ import {
   InvoiceFormSchemaType,
   invoiceSchema,
 } from "@/schema/invoice-schema.zod";
-import prisma from "@/utils/db.prisma";
 import { getSession } from "@/utils/hooks/use-session.hook";
 import { resend } from "@/utils/resend-send";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import { EditInvoiceTemplate } from "../../email-template/edit-invoice-template";
 import { ActionReturnType } from "./action.types";
+import { eq, and } from "drizzle-orm";
+import { invoices } from "@drizzle/schema.drizzle";
+import { db } from "@/utils/db.dirzzle";
 
 export async function editInvoiceAction(
   formData: InvoiceFormSchemaType,
@@ -40,45 +42,59 @@ export async function editInvoiceAction(
     (Number(parsed_data.invoiceItemRate) || 0);
 
   try {
-    const oldInvoice = await prisma.invoice.findUnique({
-      where: { id: id, userId: session.user.id, status: "PENDING" },
-    });
+    // Find the old invoice
+    const oldInvoice = await db
+      .select()
+      .from(invoices)
+      .where(
+        and(
+          eq(invoices.id, id),
+          eq(invoices.userId, session.userId),
+          eq(invoices.status, "PENDING")
+        )
+      )
+      .limit(1);
 
-    if (!oldInvoice) {
+    if (!oldInvoice || oldInvoice.length === 0) {
       return {
         type: "Custom-Error",
         error: "No Invoice found! or Invoice is marked as paid!",
       };
     }
 
-    const prismaData = await prisma.invoice.update({
-      where: { id: id, userId: session.user.id, status: "PENDING" },
-      data: {
+    // Update the invoice
+    const updated = await db
+      .update(invoices)
+      .set({
         invoiceName: parsed_data.invoiceName,
         invoiceNumber: Number(parsed_data.invoiceNumber) || 0,
-
         dueDate: parsed_data.dueDate,
         date: parsed_data.date,
-
         invoiceItemRate: Number(parsed_data.invoiceItemRate) || 0,
         invoiceItemQuantity: Number(parsed_data.invoiceItemQuantity) || 0,
         invoiceItemDescription: parsed_data.invoiceItemDescription,
         invoiceItemTotal: totalAmount,
         note: parsed_data.note,
-
         fromAddress: parsed_data.fromName,
         fromEmail: parsed_data.fromEmail,
         fromName: parsed_data.fromName,
-
         clientAddress: parsed_data.clientAddress,
         clientEmail: parsed_data.clientEmail,
         clientName: parsed_data.clientName,
-
         status: parsed_data.status,
         currency: parsed_data.currency,
         userId: session.user.id,
-      },
-    });
+      })
+      .where(
+        and(
+          eq(invoices.id, id),
+          eq(invoices.userId, session.userId),
+          eq(invoices.status, "PENDING")
+        )
+      )
+      .returning();
+
+    const prismaData = updated[0];
 
     const email = await resend.emails.send({
       from: ` ${parsed_data.fromName} <invoice@rudracode.com>`,
@@ -96,25 +112,17 @@ export async function editInvoiceAction(
           currency: parsed_data.currency,
         }),
       }) as ReactNode,
-      // Only works in prod
-      // TODO:
-      // attachments: [
-      //   {
-      //     path: `${process.env.NEXT_PUBLIC_URL}/api/invoice/${prismaData.id}`,
-      //     filename: "invoice.pdf",
-      //   },
-      // ],
+      // attachments: [...]
     });
 
     if (email.error) {
-      await prisma.invoice.delete({ where: { id: prismaData.id } });
+      await db.delete(invoices).where(eq(invoices.id, prismaData.id));
       throw new Error();
     }
 
-    // Simulate a successful response
     return { type: "success", message: "Invoice edited successfully!" };
   } catch (error) {
-    console.log("Error while creating invoice", error);
+    console.log("Error while editing invoice", error);
     return { type: "Custom-Error", error: "Error while editing invoice" };
   }
 }

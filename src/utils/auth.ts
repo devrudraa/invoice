@@ -1,10 +1,9 @@
 import NextAuth from "next-auth";
 // import Nodemailer from "next-auth/providers/nodemailer";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import { Adapter } from "next-auth/adapters";
 import Resend from "next-auth/providers/resend";
 import { db } from "./db.dirzzle";
-import prisma from "./db.prisma";
-import { Adapter } from "next-auth/adapters";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db) as Adapter,
@@ -21,7 +20,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   },
   callbacks: {
     async session({ session, user }) {
-      const db_user = await prisma.user.findUnique({ where: { id: user.id } });
+      const db_user = await db.query.users.findFirst({
+        where: (fields, { eq }) => eq(fields.id, user.id),
+      });
 
       // Setting onboarding false or true based of if firstName and address is present
       // Not using lastName as it is optional in schema.prisma

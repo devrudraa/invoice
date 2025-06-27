@@ -1,12 +1,14 @@
 "use server";
 import { formatCurrency } from "@/lib/utils";
-import prisma from "@/utils/db.prisma";
+import { db } from "@/utils/db.dirzzle";
 import { getSession } from "@/utils/hooks/use-session.hook";
 import { resend } from "@/utils/resend-send";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import { ReminderInvoiceTemplate } from "../../email-template/reminder-invoice-template";
 import { ActionReturnType } from "./action.types";
+import { invoices } from "@drizzle/schema.drizzle"; // import other tables as needed
+import { eq, and } from "drizzle-orm";
 
 export async function resendInvoiceAction(
   id: string
@@ -17,13 +19,19 @@ export async function resendInvoiceAction(
   }
 
   try {
-    const prisma_data = await prisma.invoice.findUnique({
-      where: {
-        id: id,
-        userId: session.user.id,
-        status: "PENDING",
-      },
-    });
+    const invoiceData = await db
+      .select()
+      .from(invoices)
+      .where(
+        and(
+          eq(invoices.id, id),
+          eq(invoices.userId, session.userId),
+          eq(invoices.status, "PENDING")
+        )
+      )
+      .limit(1);
+
+    const prisma_data = invoiceData[0];
 
     if (!prisma_data) {
       return { type: "Custom-Error", error: "Error no invoice found!" };

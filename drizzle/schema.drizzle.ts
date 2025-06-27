@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { InferInsertModel, InferSelectModel, sql } from "drizzle-orm";
 import {
   integer,
   primaryKey,
@@ -7,27 +7,49 @@ import {
 } from "drizzle-orm/sqlite-core";
 import { AdapterAccountType } from "next-auth/adapters";
 
-// Enums (Drizzle doesn't support native enums in SQLite, so we use text fields)
-export const users = sqliteTable("User", {
-  id: text("id").primaryKey().notNull(),
+// ============================
+// Users Table
+// ============================
+export const users = sqliteTable("user", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name"),
+  email: text("email").unique(),
+  emailVerified: integer("emailVerified", { mode: "timestamp_ms" }),
+  image: text("image"),
+
   firstName: text("firstName"),
   lastName: text("lastName"),
   address: text("address"),
-  email: text("email").notNull().unique(),
-  emailVerified: text("emailVerified"), // Store ISO string
-  image: text("image"),
+
   createdAt: text("createdAt").default(sql`CURRENT_TIMESTAMP`),
   updatedAt: text("updatedAt").default(sql`CURRENT_TIMESTAMP`),
 });
 
-export const invoices = sqliteTable("Invoice", {
-  id: text("id").primaryKey(),
+// ============================
+// Invoices Table
+// ============================
+export const invoices = sqliteTable("invoice", {
+  id: text("id")
+    .primaryKey()
+    .notNull()
+    .default(
+      sql`(lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1,1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6))))`
+    ),
   invoiceName: text("invoiceName").notNull(),
-  status: text("status", { enum: ["PAID", "PENDING"] }).notNull(), // 'PAID' | 'PENDING'
-  createdAt: text("createdAt").default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: text("updatedAt").default(sql`CURRENT_TIMESTAMP`),
+
+  createdAt: integer("createdAt", { mode: "timestamp_ms" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: integer("updatedAt", { mode: "timestamp_ms" })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
   dueDate: text("dueDate").notNull(),
-  date: text("date").notNull(),
+  date: integer("date", { mode: "timestamp_ms" }).notNull(),
+  status: text("status", {
+    enum: ["PENDING", "PAID"],
+  }).notNull(),
 
   fromName: text("fromName").notNull(),
   fromEmail: text("fromEmail").notNull(),
@@ -39,7 +61,8 @@ export const invoices = sqliteTable("Invoice", {
 
   currency: text("currency", {
     enum: ["INR", "USD", "EUR", "GBP"],
-  }).notNull(), // 'INR' | 'USD' | 'EUR' | 'GBP'
+  }).notNull(),
+
   invoiceNumber: integer("invoiceNumber").notNull(),
 
   invoiceItemDescription: text("invoiceItemDescription").notNull(),
@@ -119,3 +142,10 @@ export const authenticators = sqliteTable(
     }),
   ]
 );
+
+type User = InferSelectModel<typeof users>;
+type Invoices = InferSelectModel<typeof invoices>;
+type NewUser = InferInsertModel<typeof users>;
+type NewInvoice = InferInsertModel<typeof users>;
+
+export type { Invoices, NewInvoice, NewUser, User };

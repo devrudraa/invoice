@@ -3,7 +3,8 @@ import {
   InvoiceFormSchemaType,
   invoiceSchema,
 } from "@/schema/invoice-schema.zod";
-import prisma from "@/utils/db.prisma";
+import { db } from "@/utils/db.dirzzle";
+import { invoices } from "@drizzle/schema.drizzle";
 import { getSession } from "@/utils/hooks/use-session.hook";
 import { resend } from "@/utils/resend-send";
 import { redirect } from "next/navigation";
@@ -11,6 +12,7 @@ import { InvoiceTemplate } from "../../email-template/invoice-template";
 import { formatCurrency } from "@/lib/utils";
 import { ReactNode } from "react";
 import { ActionReturnType } from "./action.types";
+import { eq } from "drizzle-orm"; // if needed for queries
 
 export async function createInvoiceAction(
   formData: InvoiceFormSchemaType
@@ -39,8 +41,10 @@ export async function createInvoiceAction(
     (Number(parsed_data.invoiceItemRate) || 0);
 
   try {
-    const prismaData = await prisma.invoice.create({
-      data: {
+    // Insert invoice using drizzle
+    const [insertedInvoice] = await db
+      .insert(invoices)
+      .values({
         invoiceName: parsed_data.invoiceName,
         invoiceNumber: Number(parsed_data.invoiceNumber) || 0,
 
@@ -64,15 +68,17 @@ export async function createInvoiceAction(
         status: parsed_data.status,
         currency: parsed_data.currency,
         userId: session.user.id,
-      },
-    });
+      })
+      .returning();
+
+    const invoiceId = insertedInvoice?.id;
 
     const email = await resend.emails.send({
       from: ` ${parsed_data.fromName} <invoice@rudracode.com>`,
       to: [parsed_data.clientEmail],
       subject: `Invoice for ${parsed_data.clientName}`,
       react: InvoiceTemplate({
-        invoiceId: prismaData.id,
+        invoiceId,
         invoiceDueDate: new Intl.DateTimeFormat("en-IN", {
           dateStyle: "long",
         }).format(parsed_data.date),
@@ -87,14 +93,15 @@ export async function createInvoiceAction(
       // TODO:
       // attachments: [
       //   {
-      //     path: `${process.env.NEXT_PUBLIC_URL}/api/invoice/${prismaData.id}`,
+      //     path: `${process.env.NEXT_PUBLIC_URL}/api/invoice/${invoiceId}`,
       //     filename: "invoice.pdf",
       //   },
       // ],
     });
 
-    if (email.error) {
-      await prisma.invoice.delete({ where: { id: prismaData.id } });
+    if (email.error && invoiceId) {
+      // Delete invoice if email fails
+      await db.delete(invoices).where(eq(invoices.id, invoiceId));
       throw new Error();
     }
 
