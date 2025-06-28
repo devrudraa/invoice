@@ -7,14 +7,13 @@ declare module "next-auth" {
     expires: string;
     onboarded: boolean;
     sessionToken: string;
-
-    createdAt: string;
+    userId: string;
   }
 
   interface User {
-    id: string;
-    email: string;
-    emailVerified: string;
+    // id: string;
+    // email: string;
+    // emailVerified: string;
 
     firstName: string;
     lastName: string;

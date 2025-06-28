@@ -34,11 +34,9 @@ export const invoices = sqliteTable("invoice", {
   id: text("id")
     .primaryKey()
     .notNull()
-    .default(
-      sql`(lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1,1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6))))`
-    ),
-  invoiceName: text("invoiceName").notNull(),
+    .$defaultFn(() => crypto.randomUUID()),
 
+  invoiceName: text("invoiceName").notNull(),
   createdAt: integer("createdAt", { mode: "timestamp_ms" })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
@@ -64,14 +62,16 @@ export const invoices = sqliteTable("invoice", {
   }).notNull(),
 
   invoiceNumber: integer("invoiceNumber").notNull(),
-
   invoiceItemDescription: text("invoiceItemDescription").notNull(),
   invoiceItemQuantity: integer("invoiceItemQuantity").notNull(),
   invoiceItemRate: integer("invoiceItemRate").notNull(),
   invoiceItemTotal: integer("invoiceItemTotal").notNull(),
 
   note: text("note"),
-  userId: text("userId"),
+
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
 });
 
 export const accounts = sqliteTable(

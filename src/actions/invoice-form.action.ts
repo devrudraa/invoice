@@ -67,7 +67,7 @@ export async function createInvoiceAction(
 
         status: parsed_data.status,
         currency: parsed_data.currency,
-        userId: session.user.id,
+        userId: session.userId,
       })
       .returning();
 
@@ -101,6 +101,7 @@ export async function createInvoiceAction(
 
     if (email.error && invoiceId) {
       // Delete invoice if email fails
+      console.log(email.error);
       await db.delete(invoices).where(eq(invoices.id, invoiceId));
       throw new Error();
     }

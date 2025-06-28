@@ -24,8 +24,7 @@ export function UserDetailsForm({
 
   useEffect(() => {
     if (status === "authenticated" && data && changeDefaultValue) {
-      const name = `${data.user?.firstName as string} ${data.user?.lastName as string}`;
-      setValue("fromName", name);
+      setValue("fromName", data.user?.name || "");
       setValue("fromEmail", `${data.user?.email}`);
       setValue("fromAddress", `${data.user?.address}`);
     }

@@ -1,5 +1,4 @@
 import NextAuth from "next-auth";
-// import Nodemailer from "next-auth/providers/nodemailer";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { Adapter } from "next-auth/adapters";
 import Resend from "next-auth/providers/resend";
@@ -24,13 +23,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         where: (fields, { eq }) => eq(fields.id, user.id),
       });
 
+      if (db_user) {
+        session.user = {
+          id: db_user.id,
+          email: db_user.email!,
+          firstName: db_user.firstName!,
+          lastName: db_user.lastName!,
+          address: db_user.address!,
+          createdAt: db_user.createdAt!,
+          emailVerified: db_user.emailVerified,
+          name: db_user.firstName + " " + db_user.lastName,
+        };
+      }
+
       // Setting onboarding false or true based of if firstName and address is present
       // Not using lastName as it is optional in schema.prisma
-      if (db_user && db_user?.firstName && db_user?.address) {
-        session.onboarded = true; // Set onboarded to true if both fields exist
-      } else {
-        session.onboarded = false; // Set onboarded to false if either field is missing
-      }
+      session.onboarded = !!(db_user?.firstName && db_user?.address);
 
       return session;
     },
