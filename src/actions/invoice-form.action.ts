@@ -1,18 +1,17 @@
 "use server";
+import { formatCurrency } from "@/lib/utils";
 import {
   InvoiceFormSchemaType,
   invoiceSchema,
 } from "@/schema/invoice-schema.zod";
 import { db } from "@/utils/db.dirzzle";
-import { invoices } from "@drizzle/schema.drizzle";
 import { getSession } from "@/utils/hooks/use-session.hook";
 import { resend } from "@/utils/resend-send";
-import { redirect } from "next/navigation";
-import { InvoiceTemplate } from "../../email-template/invoice-template";
-import { formatCurrency } from "@/lib/utils";
-import { ReactNode } from "react";
-import { ActionReturnType } from "./action.types";
+import { invoices } from "@drizzle/schema.drizzle";
 import { eq } from "drizzle-orm"; // if needed for queries
+import { redirect } from "next/navigation";
+import EzyInvoiceInvoice from "../../emails/invoice-receipt";
+import { ActionReturnType } from "./action.types";
 
 export async function createInvoiceAction(
   formData: InvoiceFormSchemaType
@@ -77,18 +76,21 @@ export async function createInvoiceAction(
       from: ` ${parsed_data.fromName} <invoice@rudracode.com>`,
       to: [parsed_data.clientEmail],
       subject: `Invoice for ${parsed_data.clientName}`,
-      react: InvoiceTemplate({
-        invoiceId,
+      react: EzyInvoiceInvoice({
         invoiceDueDate: new Intl.DateTimeFormat("en-IN", {
           dateStyle: "long",
         }).format(parsed_data.date),
         invoiceNumber: parsed_data.invoiceNumber,
-        name: parsed_data.clientName,
+        userFirstName: parsed_data.clientName,
         totalAmount: formatCurrency({
           amount: totalAmount,
           currency: parsed_data.currency,
         }),
-      }) as ReactNode,
+        fromName: parsed_data.fromName,
+        baseUrl: process.env.NEXT_PUBLIC_URL,
+        invoiceName: parsed_data.invoiceName,
+        invoiceUrl: process.env.NEXT_PUBLIC_URL + `/api/invoice/${invoiceId}`,
+      }),
       // Only works in prod
       // TODO:
       // attachments: [

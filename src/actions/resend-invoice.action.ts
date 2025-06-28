@@ -3,12 +3,11 @@ import { formatCurrency } from "@/lib/utils";
 import { db } from "@/utils/db.dirzzle";
 import { getSession } from "@/utils/hooks/use-session.hook";
 import { resend } from "@/utils/resend-send";
-import { redirect } from "next/navigation";
-import { ReactNode } from "react";
-import { ReminderInvoiceTemplate } from "../../email-template/reminder-invoice-template";
-import { ActionReturnType } from "./action.types";
 import { invoices } from "@drizzle/schema.drizzle"; // import other tables as needed
-import { eq, and } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
+import EzyInvoiceInvoice from "../../emails/invoice-receipt";
+import { ActionReturnType } from "./action.types";
 
 export async function resendInvoiceAction(
   id: string
@@ -31,33 +30,40 @@ export async function resendInvoiceAction(
       )
       .limit(1);
 
-    const prisma_data = invoiceData[0];
+    const db_data = invoiceData[0];
 
-    if (!prisma_data) {
+    if (!db_data) {
       return { type: "Custom-Error", error: "Error no invoice found!" };
     }
+    const totalAmount =
+      (Number(db_data.invoiceItemQuantity) || 0) *
+      (Number(db_data.invoiceItemRate) || 0);
 
     const email = await resend.emails.send({
-      from: ` ${prisma_data.fromName} <invoice@rudracode.com>`,
-      to: [prisma_data.clientEmail],
-      subject: `Invoice reminder for ${prisma_data.clientName}`,
-      react: ReminderInvoiceTemplate({
-        invoiceId: prisma_data.id,
+      from: ` ${db_data.fromName} <invoice@rudracode.com>`,
+      to: [db_data.clientEmail],
+      subject: `Invoice reminder for ${db_data.clientName}`,
+      react: EzyInvoiceInvoice({
         invoiceDueDate: new Intl.DateTimeFormat("en-IN", {
           dateStyle: "long",
-        }).format(prisma_data.date),
-        invoiceNumber: String(prisma_data.invoiceNumber),
-        name: prisma_data.clientName,
+        }).format(db_data.date),
+        invoiceNumber: String(db_data.invoiceNumber),
+        userFirstName: db_data.clientName,
         totalAmount: formatCurrency({
-          amount: prisma_data.invoiceItemTotal,
-          currency: prisma_data.currency,
+          amount: totalAmount,
+          currency: db_data.currency,
         }),
-      }) as ReactNode,
+        fromName: db_data.fromName,
+        baseUrl: process.env.NEXT_PUBLIC_URL,
+        invoiceName: db_data.invoiceName,
+        invoiceUrl: process.env.NEXT_PUBLIC_URL + `/api/invoice/${db_data.id}`,
+        type: "reminder",
+      }),
       // Only works in prod
       // TODO:
       // attachments: [
       //   {
-      //     path: `${process.env.NEXT_PUBLIC_URL}/api/invoice/${prisma_data.id}`,
+      //     path: `${process.env.NEXT_PUBLIC_URL}/api/invoice/${db_data.id}`,
       //     filename: "invoice.pdf",
       //   },
       // ],

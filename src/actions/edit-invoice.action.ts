@@ -4,15 +4,14 @@ import {
   InvoiceFormSchemaType,
   invoiceSchema,
 } from "@/schema/invoice-schema.zod";
+import { db } from "@/utils/db.dirzzle";
 import { getSession } from "@/utils/hooks/use-session.hook";
 import { resend } from "@/utils/resend-send";
-import { redirect } from "next/navigation";
-import { ReactNode } from "react";
-import { EditInvoiceTemplate } from "../../email-template/edit-invoice-template";
-import { ActionReturnType } from "./action.types";
-import { eq, and } from "drizzle-orm";
 import { invoices } from "@drizzle/schema.drizzle";
-import { db } from "@/utils/db.dirzzle";
+import { and, eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
+import EzyInvoiceInvoice from "../../emails/invoice-receipt";
+import { ActionReturnType } from "./action.types";
 
 export async function editInvoiceAction(
   formData: InvoiceFormSchemaType,
@@ -94,29 +93,40 @@ export async function editInvoiceAction(
       )
       .returning();
 
-    const prismaData = updated[0];
+    const dbData = updated[0];
 
     const email = await resend.emails.send({
       from: ` ${parsed_data.fromName} <invoice@rudracode.com>`,
       to: [parsed_data.clientEmail],
       subject: `Invoice for ${parsed_data.clientName}`,
-      react: EditInvoiceTemplate({
-        invoiceId: prismaData.id,
+      react: EzyInvoiceInvoice({
         invoiceDueDate: new Intl.DateTimeFormat("en-IN", {
           dateStyle: "long",
         }).format(parsed_data.date),
         invoiceNumber: parsed_data.invoiceNumber,
-        name: parsed_data.clientName,
+        userFirstName: parsed_data.clientName,
         totalAmount: formatCurrency({
           amount: totalAmount,
           currency: parsed_data.currency,
         }),
-      }) as ReactNode,
-      // attachments: [...]
+        fromName: parsed_data.fromName,
+        baseUrl: process.env.NEXT_PUBLIC_URL,
+        invoiceName: parsed_data.invoiceName,
+        invoiceUrl: process.env.NEXT_PUBLIC_URL + `/api/invoice/${dbData.id}`,
+        type: "update",
+      }),
+      // Only works in prod
+      // TODO:
+      // attachments: [
+      //   {
+      //     path: `${process.env.NEXT_PUBLIC_URL}/api/invoice/${invoiceId}`,
+      //     filename: "invoice.pdf",
+      //   },
+      // ],
     });
 
     if (email.error) {
-      await db.delete(invoices).where(eq(invoices.id, prismaData.id));
+      await db.delete(invoices).where(eq(invoices.id, dbData.id));
       throw new Error();
     }
 

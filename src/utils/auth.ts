@@ -3,6 +3,8 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { Adapter } from "next-auth/adapters";
 import Resend from "next-auth/providers/resend";
 import { db } from "./db.dirzzle";
+import { resend } from "./resend-send";
+import MagicLinkEmail from "../../emails/magic-link";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db) as Adapter,
@@ -10,6 +12,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Resend({
       apiKey: process.env.AUTH_RESEND_KEY,
       from: "auth@rudracode.com",
+      async sendVerificationRequest({
+        identifier: email,
+        url,
+        provider: { from },
+      }) {
+        const { data, error } = await resend.emails.send({
+          from: from || "auth@rudracode.com",
+          to: [email],
+          subject: "Sign in to your account",
+          react: MagicLinkEmail({
+            hostUrl: process.env.NEXT_PUBLIC_URL,
+            magicLink: url,
+          }),
+        });
+
+        if (error) {
+          console.error("Error sending email:", error);
+        } else {
+          console.log("Email sent successfully:", data);
+        }
+      },
     }),
   ],
   pages: {
@@ -37,7 +60,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
 
       // Setting onboarding false or true based of if firstName and address is present
-      // Not using lastName as it is optional in schema.prisma
+      // Not using lastName as it is optional in schema
       session.onboarded = !!(db_user?.firstName && db_user?.address);
 
       return session;
