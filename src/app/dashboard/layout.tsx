@@ -46,7 +46,7 @@ const Layout: FC<LayoutProps> = async ({ children }) => {
               <DashboardMobileNav />
             </div>
           </header>
-          <main className="max-w-[100dvw] flex flex-1 flex-col gap-4 lg:gap-6 p-2 lg:p-6">
+          <main className="max-w-[100dvw] flex flex-1 flex-col gap-4 lg:gap-6 p-2 lg:p-4">
             {children}
           </main>
         </div>

@@ -6,12 +6,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import InvoiceTable from "./invoice-table";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function InvoicesPage() {
   return (
@@ -33,7 +33,7 @@ export default function InvoicesPage() {
           </Link>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="px-2">
         <Suspense fallback={<SkeletonTable />}>
           <InvoiceTable />
         </Suspense>
