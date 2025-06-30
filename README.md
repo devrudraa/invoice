@@ -1,36 +1,120 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Invoice Management System 💼📨
 
-## Getting Started
+A modern and intuitive Invoice Management System that lets you create, update, and manage invoices for your clients — with automatic PDF generation, email notifications, and real-time revenue tracking via graphs.
 
-First, run the development server:
+---
+
+## 🚀 Features
+
+- **Create Invoices**: Fill out a form to generate invoices with a downloadable PDF.
+- **Automatic Emails**:
+  - Send invoice emails to clients with PDF attachments.
+  - Send reminder emails for pending invoices.
+  - Send update emails automatically when invoices are edited.
+- **Revenue Dashboard**:
+  - Mark invoices as _Paid_ or _Pending_.
+  - Visualize total revenue through interactive charts.
+- **Multi-Currency Support**: Works with `INR`, `USD`, `EUR`, and `GBP`.
+- **Landing Page**: A professional landing page to present your tool.
+- **Authentication**: Secure access to your dashboard.
+
+---
+
+## 📸 Screenshots
+
+![Dashboard Screenshot](https://raw.githubusercontent.com/devrudraa/invoice/refs/heads/master/public/images/dashboard-mac-2.png)
+![Invoice Form](./screenshots/form.png)
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React / `Next.js` / TailwindCSS / Shadcn UI
+- **Backend**: Next.js API Routes / Next-auth
+- **Database**: SQLite / `Drizzle` / Turso
+- **Email**: `Resend`
+- **PDF**: `js-pdf`
+- **Others**: React-hook forms, Zod, react-email
+
+---
+
+## 📦 Getting Started
+
+### 1. Clone the Repo
+
+```bash
+git clone https://github.com/your-username/invoice-management-system.git
+cd invoice-management-system
+```
+
+### 2. Install Dependencies
+
+```bash
+npm i
+# or
+yarn i
+```
+
+### 3. Setup Environment Variables
+
+```bash
+DATABASE_URL=your_database_url
+EMAIL_SERVER=smtp.your-email.com
+EMAIL_USER=your@email.com
+EMAIL_PASSWORD=your_email_password
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+```
+
+### 4. Run the Dev Server
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📤 Deployment
 
-## Learn More
+You can deploy this project on platforms like:
 
-To learn more about Next.js, take a look at the following resources:
+- Vercel
+- Railway
+- Render
+- Heroku
+- DigitalOcean
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Make sure to set your environment variables on the respective platform.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🤝 Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Contributions, issues, and feature requests are welcome!  
+Feel free to fork the repo and submit a PR.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📄 License
+
+MIT
+
+---
+
+## 💡 Future Improvements
+
+- User authentication & team access
+- Recurring invoices
+- Web push notifications
+- Invoice templates/themes
+- Mobile-responsive improvements
+
+---
+
+## 👨‍💻 Author
+
+Dev Rudra  
+[Portfolio](https://rudracode.com) · [GitHub](https://github.com/devrudra) · [Linkedin](https://www.linkedin.com/in/devrudraa/)

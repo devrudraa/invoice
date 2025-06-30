@@ -5,10 +5,6 @@ import { invoices } from "@drizzle/schema.drizzle";
 import { getSession } from "@/utils/hooks/use-session.hook";
 import { eq, and, gte, lte, desc } from "drizzle-orm";
 
-// Helper to get current and 30 days ago dates
-const now = new Date();
-const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-
 async function getInvoiceData(id: string) {
   // Get all invoices for user
   const totalRevenue = await db
@@ -39,6 +35,10 @@ async function getInvoiceData(id: string) {
 }
 
 async function getInvoiceGraphData(id: string) {
+  const now = new Date();
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(now.getDate() - 30);
+
   const data = await db
     .select({
       createdAt: invoices.createdAt,

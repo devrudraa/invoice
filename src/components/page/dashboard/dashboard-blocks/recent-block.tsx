@@ -49,7 +49,7 @@ export default function RecentBlock() {
                   {client.clientEmail}
                 </p>
               </div>
-              <div className="ml-auto text-green-500">
+              <div className="ml-auto text-green-500 whitespace-nowrap">
                 +
                 {formatCurrency({
                   amount: client.invoiceItemTotal,

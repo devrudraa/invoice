@@ -7,10 +7,10 @@ async function Page() {
   await getSession();
 
   return (
-    <main className="space-y-4 md:space-y-8">
+    <main className="space-y-2 md:space-y-4">
       <SummaryBlock />
 
-      <div className="grid gap-4 md:gap-8 xl:grid-cols-3">
+      <div className="grid gap-2 md:gap-4 xl:grid-cols-3">
         <GraphBlock />
         <RecentBlock />
       </div>

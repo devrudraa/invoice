@@ -38,11 +38,11 @@ export const invoices = sqliteTable("invoice", {
 
   invoiceName: text("invoiceName").notNull(),
   createdAt: integer("createdAt", { mode: "timestamp_ms" })
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+    .notNull()
+    .default(sql`(strftime('%s','now') * 1000)`),
   updatedAt: integer("updatedAt", { mode: "timestamp_ms" })
-    .default(sql`CURRENT_TIMESTAMP`)
-    .notNull(),
+    .notNull()
+    .default(sql`(strftime('%s','now') * 1000)`),
   dueDate: text("dueDate").notNull(),
   date: integer("date", { mode: "timestamp_ms" }).notNull(),
   status: text("status", {

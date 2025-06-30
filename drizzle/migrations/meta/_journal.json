@@ -5,22 +5,8 @@
     {
       "idx": 0,
       "version": "6",
-      "when": 1751050074637,
-      "tag": "0000_strange_caretaker",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "6",
-      "when": 1751050626275,
-      "tag": "0001_keen_malcolm_colcord",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "6",
-      "when": 1751090004916,
-      "tag": "0002_cool_songbird",
+      "when": 1751301151947,
+      "tag": "0000_vengeful_mimic",
       "breakpoints": true
     }
   ]
