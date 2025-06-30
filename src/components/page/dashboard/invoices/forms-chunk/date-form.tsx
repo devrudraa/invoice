@@ -68,8 +68,9 @@ export function DateForm() {
                     captionLayout="dropdown"
                     selected={field.value}
                     onSelect={field.onChange}
-                    startMonth={new Date()}
-                    hidden={[{ before: new Date() }]}
+                    disabled={{
+                      before: new Date(),
+                    }}
                   />
                 </PopoverContent>
               </Popover>
