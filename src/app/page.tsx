@@ -1,5 +1,5 @@
 "use client";
-import BenefitsSection from "@/components/page/home/benifit-section";
+import BenefitsSection from "@/components/page/home/benefit-section";
 import { CTASection } from "@/components/page/home/cta-section";
 import FAQ from "@/components/page/home/faq-section";
 import HeroSection from "@/components/page/home/hero-section";
@@ -15,11 +15,13 @@ export default function Home() {
   return (
     <SessionProvider>
       <main>
-        <Header />
         <section>
-          <HeroSection />
+          <div className="relative">
+            <Header />
+            <HeroSection />
+          </div>
           <div className="relative sm:rounded-t-3xl lg:rounded-t-[50px] bg-white mb-20">
-            <div className="absolute top-0 right-0 bg-[#9471f3] h-40 w-full -z-[1]" />
+            <div className="absolute top-0 right-0 bg-black h-40 w-full -z-[1]" />
             <div className="flex z-20 w-full items-center justify-center translate-y-5">
               <LogosSection />
             </div>

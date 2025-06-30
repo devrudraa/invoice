@@ -20,19 +20,19 @@ export const footerDetails: {
   socials: socialsIcon[];
 } = {
   subheading:
-    "Empowering businesses with cutting-edge financial technology solutions.",
+    "EzyInvoice empowers with smart invoicing solutions to streamline billing, track payments, and boost cash flow efficiency.",
   quickLinks: [
     {
       text: "Features",
       url: "#features",
     },
     {
-      text: "Pricing",
-      url: "#pricing",
-    },
-    {
       text: "Testimonials",
       url: "#testimonials",
+    },
+    {
+      text: "FAQs",
+      url: "#faq",
     },
   ],
   email: "contact@rudracode.com",
@@ -40,11 +40,15 @@ export const footerDetails: {
   socials: [
     {
       label: "GItHub",
-      link: "https://github.com",
+      link: "https://github.com/devrudraa/invoice",
     },
     {
       label: "Linkedin",
-      link: "https://www.linkedin.com",
+      link: "https://linkedin.com/in/devrudraa",
+    },
+    {
+      label: "Website",
+      link: "https://rudracode.com",
     },
   ],
 };

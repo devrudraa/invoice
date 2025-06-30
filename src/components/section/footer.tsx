@@ -29,7 +29,11 @@ const Footer: React.FC = () => {
           <ul className="text-foreground-accent">
             {footerDetails.quickLinks.map((link) => (
               <li key={link.text} className="mb-2">
-                <Link href={link.url} className="hover:text-foreground">
+                <Link
+                  href={link.url}
+                  className="hover:text-foreground"
+                  target="_blank"
+                >
                   {link.text}
                 </Link>
               </li>

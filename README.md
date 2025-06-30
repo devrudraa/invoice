@@ -100,7 +100,7 @@ Feel free to fork the repo and submit a PR.
 
 ## 📄 License
 
-MIT
+[MIT License](./LICENSE)
 
 ---
 

@@ -1,6 +1,6 @@
 "use client";
 import { benefits } from "@/lib/data";
-import BenefitCard from "./benifit-card";
+import BenefitCard from "./benefit-card";
 
 const BenefitsSection: React.FC = () => {
   return (
