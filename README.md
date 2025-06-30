@@ -22,8 +22,8 @@ A modern and intuitive Invoice Management System that lets you create, update, a
 
 ## 📸 Screenshots
 
-![Dashboard Screenshot](https://raw.githubusercontent.com/devrudraa/invoice/refs/heads/master/public/images/dashboard-mac-2.png)
-![Invoice Form](./screenshots/form.png)
+![Landing Page Screenshot](/public/images/landing.png)
+![Dashboard Screenshot](/public/images/dashboard.png)
 
 ---
 
