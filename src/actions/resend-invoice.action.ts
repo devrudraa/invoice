@@ -40,7 +40,7 @@ export async function resendInvoiceAction(
       (Number(db_data.invoiceItemRate) || 0);
 
     const email = await resend.emails.send({
-      from: ` ${db_data.fromName} <invoice@rudracode.com>`,
+      from: `${db_data.fromName} <invoice@rudracode.com>`,
       to: [db_data.clientEmail],
       subject: `Invoice reminder for ${db_data.clientName}`,
       react: EzyInvoiceInvoice({

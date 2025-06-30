@@ -11,14 +11,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Resend({
       apiKey: process.env.AUTH_RESEND_KEY,
-      from: "auth@rudracode.com",
+      from: "EzyInvoice - SignIn <invoice@rudracode.com>",
       async sendVerificationRequest({
         identifier: email,
         url,
         provider: { from },
       }) {
         const { data, error } = await resend.emails.send({
-          from: from || "auth@rudracode.com",
+          from: from || "EzyInvoice - SignIn <invoice@rudracode.com>",
           to: [email],
           subject: "Sign in to your account",
           react: MagicLinkEmail({

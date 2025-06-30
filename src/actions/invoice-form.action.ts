@@ -73,7 +73,7 @@ export async function createInvoiceAction(
     const invoiceId = insertedInvoice?.id;
 
     const email = await resend.emails.send({
-      from: ` ${parsed_data.fromName} <invoice@rudracode.com>`,
+      from: `${parsed_data.fromName} <invoice@rudracode.com>`,
       to: [parsed_data.clientEmail],
       subject: `Invoice for ${parsed_data.clientName}`,
       react: EzyInvoiceInvoice({
