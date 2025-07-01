@@ -6,7 +6,7 @@ const HeroSection: React.FC = () => {
     <>
       <section
         id="hero"
-        className="w-full flex items-center justify-center px-5 min-h-[30rem] py-20 md:py-30"
+        className="w-full flex items-center justify-center px-5 min-h-[35rem] py-20 md:py-30"
       >
         <div className="absolute left-0 top-0 bottom-0 z-10 w-full">
           <div className="absolute inset-0 h-full w-full bg-hero-background bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_60%,transparent_100%)]"></div>

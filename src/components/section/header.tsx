@@ -80,7 +80,7 @@ const Header: React.FC = () => {
           : "0 0 0 rgba(0, 0, 0, 0)",
       }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className={`sticky top-0 right-0 w-full z-50 backdrop-blur-md transition-shadow`}
+      className={`fixed top-0 right-0 w-full z-50 backdrop-blur-md transition-shadow`}
     >
       <Container className="!px-0">
         <nav className="shadow-md md:shadow-none bg-transparent md:bg-transparent mx-auto flex justify-between items-center px-5 py-5">
@@ -120,16 +120,20 @@ const Header: React.FC = () => {
               {status != "authenticated" ? (
                 <Link
                   href="/login"
-                  className="text-black inline-flex h-10 items-center justify-center border border-gray-300 bg-white px-8 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50 rounded-full"
+                  className={cn(
+                    "text-black inline-flex h-10 items-center justify-center border border-gray-300 bg-white px-8 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 focus:ring-offset-gray-50 rounded-full",
+                    scrolled && "bg-black text-white"
+                  )}
                 >
                   Login
                 </Link>
               ) : (
                 <Link
                   href="/dashboard"
-                  className={
-                    "text-secondary-foreground bg-secondary hover:bg-primary-accent px-5 py-2 rounded-full transition-colors"
-                  }
+                  className={cn(
+                    "text-secondary-foreground bg-secondary hover:bg-primary-accent px-5 py-2 rounded-full transition-colors",
+                    scrolled && "bg-black text-white"
+                  )}
                 >
                   Dashboard
                 </Link>
