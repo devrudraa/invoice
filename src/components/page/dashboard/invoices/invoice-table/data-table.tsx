@@ -1,17 +1,19 @@
 "use client";
-import * as React from "react";
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
-  useReactTable,
-  getPaginationRowModel,
-  SortingState,
-  getSortedRowModel,
-  ColumnFiltersState,
   getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
 } from "@tanstack/react-table";
+import * as React from "react";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -20,26 +22,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Invoices } from "@drizzle/schema.drizzle";
 import { Search } from "lucide-react";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+interface DataTableProps<TValue> {
+  columns: ColumnDef<Invoices, TValue>[];
+  data: Invoices[];
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export function DataTable<TValue>({ columns, data }: DataTableProps<TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [globalFilter, setGlobalFilter] = React.useState("");
   const [rowSelection, setRowSelection] = React.useState({});
 
-  const table = useReactTable({
+  const table = useReactTable<Invoices>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -49,25 +48,36 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: (row, columnId, filterValue) => {
+      return (
+        row.original.invoiceName
+          .toLowerCase()
+          .includes(filterValue.toLowerCase()) ||
+        row.original.clientName
+          .toLowerCase()
+          .includes(filterValue.toLowerCase()) ||
+        row.original.clientEmail
+          .toLowerCase()
+          .includes(filterValue.toLowerCase())
+      );
+    },
     state: {
       sorting,
       columnFilters,
       rowSelection,
+      globalFilter,
     },
   });
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center flex-1">
+      <div className="flex items-center flex-1 gap-2">
         <Input
           icon={<Search />}
-          placeholder="Filter emails..."
-          value={
-            (table.getColumn("clientEmail")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("clientEmail")?.setFilterValue(event.target.value)
-          }
+          placeholder="Search invoice, client name, or email..."
+          value={globalFilter ?? ""}
+          onChange={(event) => setGlobalFilter(event.target.value)}
           type="search"
           className="w-full"
         />
