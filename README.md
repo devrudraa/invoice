@@ -43,7 +43,7 @@ A modern and intuitive Invoice Management System that lets you create, update, a
 ### 1. Clone the Repo
 
 ```bash
-git clone https://github.com/your-username/invoice-management-system.git
+git clone https://github.com/devrudraa/invoice.git
 cd invoice-management-system
 ```
 
@@ -58,11 +58,11 @@ yarn i
 ### 3. Setup Environment Variables
 
 ```bash
-DATABASE_URL=your_database_url
-EMAIL_SERVER=smtp.your-email.com
-EMAIL_USER=your@email.com
-EMAIL_PASSWORD=your_email_password
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
+AUTH_SECRET=next-auth-secret
+AUTH_RESEND_KEY=re_********
+NEXT_PUBLIC_URL=http://localhost:3000
+TURSO_DATABASE_URL=libsql://**********
+TURSO_AUTH_TOKEN=turso-token
 ```
 
 ### 4. Run the Dev Server

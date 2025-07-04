@@ -59,14 +59,15 @@ export async function resendInvoiceAction(
         invoiceUrl: process.env.NEXT_PUBLIC_URL + `/api/invoice/${db_data.id}`,
         type: "reminder",
       }),
-      // Only works in prod
-      // TODO:
-      // attachments: [
-      //   {
-      //     path: `${process.env.NEXT_PUBLIC_URL}/api/invoice/${db_data.id}`,
-      //     filename: "invoice.pdf",
-      //   },
-      // ],
+      // Conditionally include the attachment only in production
+      ...(process.env.NODE_ENV === "production" && {
+        attachments: [
+          {
+            path: `${process.env.NEXT_PUBLIC_URL}/api/invoice/${db_data.id}`,
+            filename: `${db_data.invoiceName}-invoice.pdf`,
+          },
+        ],
+      }),
     });
 
     if (email.error) {

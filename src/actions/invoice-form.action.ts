@@ -91,14 +91,15 @@ export async function createInvoiceAction(
         invoiceName: parsed_data.invoiceName,
         invoiceUrl: process.env.NEXT_PUBLIC_URL + `/api/invoice/${invoiceId}`,
       }),
-      // Only works in prod
-      // TODO:
-      // attachments: [
-      //   {
-      //     path: `${process.env.NEXT_PUBLIC_URL}/api/invoice/${invoiceId}`,
-      //     filename: "invoice.pdf",
-      //   },
-      // ],
+      // Conditionally include the attachment only in production
+      ...(process.env.NODE_ENV === "production" && {
+        attachments: [
+          {
+            path: `${process.env.NEXT_PUBLIC_URL}/api/invoice/${invoiceId}`,
+            filename: `${parsed_data.invoiceName}-invoice.pdf`,
+          },
+        ],
+      }),
     });
 
     if (email.error && invoiceId) {
